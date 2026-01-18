@@ -1,8 +1,11 @@
+import { allowedWords } from "./config.js";
 createSquares();
 const keys=document.querySelectorAll('.keyboard-row button');
 let guessedWords=[[]];
 let availableSpace=1;
-let word="fiery";
+let randIndex=Math.floor(Math.random()*allowedWords.length);
+let word=allowedWords[randIndex];
+console.log(word); //just to verify the results
 let guessedWordCount=0;
 
 function createSquares(){
@@ -73,7 +76,15 @@ function handleSubmitWord(){
     }
     guessedWords.push([]);
 }
+function handleDeleteLetter(){
+    const currentWordArr=getCurrentWordArr();
+    const removedLetter=currentWordArr.pop();
+    guessedWords[guessedWords.length - 1]=currentWordArr;
 
+    const lastletterEl=document.getElementById(String(availableSpace-1));
+    lastletterEl.textContent="";
+    availableSpace=availableSpace-1;
+}
 
 for (let i= 0; i<keys.length; i++){
     keys[i].onclick=({target})=>{
@@ -81,6 +92,10 @@ for (let i= 0; i<keys.length; i++){
 
         if(letter==='enter'){
             handleSubmitWord();
+            return;
+        }
+        if(letter==="del"){
+            handleDeleteLetter();
             return;
         }
 
